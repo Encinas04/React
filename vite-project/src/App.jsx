@@ -1,32 +1,27 @@
 import './App.css'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
+import TaskList from "./components/TaskList";
 import Header from "./components/Header";
 import Profile from "./components/Profile";
 import Skill from "./components/Skill";
 import Footer from "./components/Footer";
 import Contact from "./components/Contact.jsx";
+import TaskForm from "./components/TaskForm.jsx";
 function App() {
-    const skills = ["Javascript", "jQuery", "Vue", "Angular", "React", "Node.js"]
-    const [showSkills, setShowSkills] = useState(false);
-    const [show, setShow] = useState(false);
-    return(
-    <div>
-        <Header />
-        <Profile name="Hector" age={21} profession="Desarrollador web"/>
-        <Contact email={"hector@email.com"} phone={4745794556} show={show}/>
-        <button onClick={()=> setShow(!show)}>
-            Mostrar contacto
-        </button>
+    const [tasks, setTasks] = useState([]);
 
-    <h3>Habilidades</h3>
-            <Skill array={skills} show={showSkills}/>
+    useEffect(() => {
+        fetch("https://jsonplaceholder.typicode.com/todos")
+            .then(res => res.json())
+            .then(data => setTasks(data));
+    }, []);
 
-        <button onClick={()=> setShowSkills(!showSkills)}>
-            Mostrar Skills
-        </button>
+   return(
+       <>
+       <TaskForm  tasks={tasks} setTasks={setTasks} />
 
-        <Footer />
-    </div>
-)
+       <TaskList tasks={tasks} />
+       </>
+   )
 }
 export default App
